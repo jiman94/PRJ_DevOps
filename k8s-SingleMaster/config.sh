@@ -1,11 +1,5 @@
 #! /usr/bin/env bash
 
-# ssh configuration
-now=$(date +"%m_%d_%Y")
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config_$now.backup
-sed -i -e 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-systemctl restart sshd
-
 # vim configuration 
 echo 'alias vi=vim' >> /etc/profile
 
@@ -37,4 +31,17 @@ EOF
 
 modprobe br_netfilter
 
+# local small dns 
+cat <<EOF >  /etc/hosts
+192.168.1.10 m-k8s 
+192.168.1.101 w1-k8s
+192.168.1.102 w2-k8s
+192.168.1.103 w3-k8s
+EOF
 
+# config DNS  
+cat <<EOF > /etc/resolv.conf
+nameserver 1.1.1.1
+nameserver 8.8.8.8 #Google DNS
+nameserver 168.126.63.1 #KT DNS
+EOF
